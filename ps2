@@ -71,3 +71,5 @@ fizzbuzz(5)
 end.time <- Sys.time()
 time.taken <- end.time - start.time
 time.taken
+
+# a/3 == integer(a/3) czasem zwraca logical(0) 
