@@ -1,0 +1,73 @@
+sum_new <- function(x,y){
+  if (x<0) return("not available")
+  x+y
+}
+
+x <- c(1,2,3,NA,4,5)
+y <- c(NA,2,3,NA,2,2)
+
+v1 <- sample(c(1, NA), size=100, prob=c(0.3, 0.7), replace=TRUE)
+v2 <- sample(c(1, NA), size=100, prob=c(0.3, 0.7), replace=TRUE)
+
+where_NA <- function(x,y){
+  intersect(which(is.na(x)),which(is.na(y)))
+}
+
+where_NA_2 <- function(x,y){
+  result <- c()
+  for (i in 1:length(x)){
+    if (is.na(x[i]) && is.na(y[i])){
+    result <- c(result, i)
+  }
+}
+  return(result)
+}
+#druga opcja
+which(is.na(x) & is.na(y))
+
+fizzbuzz <- function(a){
+  if (a%%3 == 0 && a%%5 == 0) {
+    return("fizzbuzz")
+  }
+  else if (a%%3 == 0) {
+    return("fizz")
+  }
+  else if (a%%5 == 0) {
+    return("buzz")
+  } else{
+    return(a)
+  }
+}
+
+fizzbuzz2 <- function(a){
+  result <- ""
+  if (a%%3 == 0) {
+    result <- paste(result,"fizz")
+  }
+  if (a%%5 == 0) {
+    result <- paste(result,"buzz")
+  } 
+  else{
+    result = a
+  }
+  return(gsub(" ", "", result)) #usuwanie spacji
+}
+fizzbuzz2 <- function(a){
+  result <- ""
+  if (a%%3 == 0) {
+    result <- paste0(result,"fizz") #paste0 nie dodaje spacji
+  }
+  if (a%%5 == 0) {
+    result <- paste0(result,"buzz")
+  } 
+  if (result == ""){
+    return(a)
+  }
+  result
+}
+
+start.time <- Sys.time()
+fizzbuzz(5)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
