@@ -1,0 +1,11 @@
+library(tidyverse)
+url <- "https://raw.githubusercontent.com/Kowal13/Pakiety/refs/heads/main/badania.csv"
+badania <- read_csv(url)
+istotne <- badania %>%
+  group_by(weg) %>%
+  summarize(p_value = t.test(age_of_death ~ smoothie)$p.value) %>% 
+  filter(p_value < 0.05) %>% select(weg)
+
+badania %>% filter(weg == "Arbuz") |> view()
+
+badania_publikacja <- badania %>% filter(weg %in% istotne$weg) |> view() 
