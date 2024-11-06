@@ -1,0 +1,43 @@
+```{r}
+
+```
+
+---
+title: "spotify_most_streamed"
+---
+
+## Spotify
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+```{r}
+spotify <- read_csv("spotify_data.csv")
+```
+
+```{r}
+view(spotify)
+```
+
+```{r}
+spotify_cleaned <- spotify |>
+  mutate(streams = as.integer(streams),
+         key = factor(key),
+         mode = factor(mode)) |>
+  filter(!is.na(streams))
+```
+
+```{r}
+spotify_cleaned |> 
+  mutate(streams_in_mln = as.integer(streams / 10^6)) |>
+  ggplot(aes(x = in_spotify_playlists, y = streams_in_mln)) + 
+  geom_point()
+```
+
+```{r}
+spotify_cleaned |> 
+  ggplot(aes(x = bpm, y = `danceability_%`)) +
+  geom_point() + 
+  geom_smooth()
+```
