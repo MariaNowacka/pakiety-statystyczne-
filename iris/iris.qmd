@@ -1,0 +1,42 @@
+---
+title: "iris"
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+data("iris")
+```
+
+```{r}
+iris |>
+  ggplot(mapping = aes(x=Petal.Length, fill = Species)) +
+  geom_density(alpha=0.5)
+```
+
+```{r}
+petal_length_versicolor = iris$Sepal.Length[iris$Species == "versicolor"]
+petal_length_virginica = iris$Sepal.Length[iris$Species == "virginica"]
+  
+```
+
+```{r}
+t.test(petal_length_versicolor, petal_length_virginica)
+```
+
+```{r}
+shapiro.test(petal_length_versicolor)
+```
+
+```{r}
+shapiro.test(petal_length_virginica)    
+```
