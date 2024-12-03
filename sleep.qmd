@@ -1,0 +1,45 @@
+---
+format: pdf
+---
+# ![Nagłówek](https://github.com/13928861/pakiety/blob/main/ooa.png?raw=true)
+
+```{r}
+library(tidyverse)
+data = read.csv('sleep.csv')
+view(data)
+
+```
+
+```{r}
+data_better <- data |> 
+  mutate(Smoking.status = as.factor(Smoking.status))
+```
+
+```{r}
+data_better |> 
+  mutate(Gender = as.factor(Gender))
+```
+
+```{r}
+data_better |>
+  mutate(
+    Bedtime = as.POSIXct(Bedtime, format = "%d/%m/%Y %H:%M"),
+    Wakeup.time = as.POSIXct(Wakeup.time, format = "%d/%m/%Y %H:%M"),
+    Month = format(Bedtime, "%m")
+  )
+view(data_better)
+```
+
+```{r}
+data_better |> 
+  mutate(
+    Bedtime = as.POSIXct(Bedtime, format = "%d/%m/%Y %H:%M"),
+    Wakeup.time = as.POSIXct(Wakeup.time, format = "%d/%m/%Y %H:%M"),
+    Month = format(Bedtime, "%m")) |>
+  ggplot(aes(x = Month, y = mean(Sleep.duration))) + 
+  geom_point()
+```
+
+\
+
+\
