@@ -124,7 +124,7 @@ W celu realizacji tematu skonstruowałyśmy kilka pytań badawczych:
 
 **2. Wczytanie danych**
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(tidyverse)
 data = read.csv('sleep.csv')
 view(data)
@@ -139,16 +139,28 @@ data_better <- data %>%
     Gender = as.factor(Gender),
     Bedtime = as.POSIXct(Bedtime, format = "%d/%m/%Y %H:%M"),
     Wakeup.time = as.POSIXct(Wakeup.time, format = "%d/%m/%Y %H:%M"),
-    Sleep.duration = difftime(Wakeup.time, Bedtime, units = "hours"),
+    #Sleep.duration = difftime(Wakeup.time, Bedtime, units = "hours"),
     Month = format(Bedtime, "%m")
   )
 ```
 
+**3. Analiza danych**
+
 ```{r}
-# Oblicz średnią długość snu dla każdego miesiąca i narysuj wykres
-data_better %>%
+# Przefiltruj dane, aby usunąć ujemne lub błędne wartości
+#data_clean <- data_better %>%
+#  filter(Sleep.duration > 0)  # Usuwa rekordy z ujemnymi wartościami lub zerami
+
+# Oblicz średnią długość snu dla każdego miesiąca i wyświetl dane
+average_sleep <- data_better %>%
   group_by(Month) %>%
-  summarise(Average.sleep = mean(Sleep.duration, na.rm = TRUE)) %>%
+  summarise(Average.sleep = mean(Sleep.duration, na.rm = TRUE))
+
+# Sprawdź obliczone średnie (opcjonalne)
+print(average_sleep)
+
+# Narysuj wykres słupkowy
+average_sleep %>%
   ggplot(aes(x = Month, y = Average.sleep)) +
   geom_col(fill = "skyblue") +  # Wykres słupkowy
   labs(
@@ -164,50 +176,127 @@ data_better %>%
 
 ```{r}
 library(dplyr)
+```
 
+```{r}
 # Zmiana wartości w kolumnie Gender (Male -> 1, Female -> 0)
-dataframe <- data %>%
-  mutate(Gender = ifelse(Gender == "Male", 1, 0))
+#dataframe <- data %>%
+#  mutate(Gender = ifelse(Gender == "Male", 1, 0))
 
 # Zmiana wartości w kolumnie Smoking status (Yes -> 1, No -> 0)
-dataframe <- dataframe %>%
-  mutate(Smoking.status = ifelse(Smoking.status == "Yes", 1, 0))
+#dataframe <- dataframe %>%
+#  mutate(Smoking.status = ifelse(Smoking.status == "Yes", 1, 0))
 
 # Konwersja Bedtime i Wakeup time na format daty i czasu
-dataframe <- dataframe %>%
-  mutate(
-    Bedtime = as.POSIXct(Bedtime, format = "%d/%m/%Y %H:%M"),
-    Wakeup.time = as.POSIXct(Wakeup.time, format = "%d/%m/%Y %H:%M")
-  )
+#dataframe <- dataframe %>%
+#  mutate(
+#    Bedtime = as.POSIXct(Bedtime, format = "%d/%m/%Y %H:%M"),
+#    Wakeup.time = as.POSIXct(Wakeup.time, format = "%d/%m/%Y %H:%M")
+#  )
 
 # Konwersja Bedtime i Wakeup time na liczbę sekund od epoki (UNIX timestamp)
-dataframe <- dataframe %>%
-  mutate(
-    Bedtime = as.numeric(as.POSIXct(Bedtime)),
-    Wakeup.time = as.numeric(as.POSIXct(Wakeup.time))
-  )
+#dataframe <- dataframe %>%
+#  mutate(
+#    Bedtime = as.numeric(as.POSIXct(Bedtime)),
+#    Wakeup.time = as.numeric(as.POSIXct(Wakeup.time))
+#  )
 
+```
+
+```{r}
 # Przeniesienie kolumny "Sleep efficiency" na koniec
-cols <- colnames(dataframe)
-dataframe <- dataframe %>%
-  select(all_of(setdiff(cols, "Sleep.efficiency")), "Sleep.efficiency")
+#cols <- colnames(data_better)
+#data_better <- data_better %>%
+#  select(all_of(setdiff(cols, "Sleep.efficiency")), "Sleep.efficiency")
 
 # Usunięcie kolumny ID
-dataframe <- dataframe %>%
-  select(-ID)
 
+
+
+```
+
+```{r}
 # Rysowanie histogramów dla wszystkich kolumn
 library(ggplot2)
+# Wyciąganie tylko zmiennych numerycznych
+data_numeric <- data_better %>%
+  select_if(is.numeric)
 
-dataframe %>%
+# Wyświetlenie pierwszych kilku wierszy z danych numerycznych
+head(data_numeric)
+data_numeric %>%
   gather(key = "Variable", value = "Value") %>%
   ggplot(aes(x = Value)) +
   facet_wrap(~Variable, scales = "free") +
   geom_histogram(bins = 30, fill = "skyblue", color = "black") +
   theme_minimal() +
   labs(title = "Histogramy dla wszystkich kolumn", x = "Wartość", y = "Częstotliwość")
+```
 
-# Podgląd pierwszych wierszy danych
-head(dataframe)
+```{r}
+library(ggplot2)
+library(ggcorrplot)
 
+# Obliczenie macierzy korelacji metodą Spearmana
+correlation_matrix <- cor(data_numeric, method = "spearman", use = "complete.obs")
+
+# Rysowanie mapy cieplnej z adnotacjami
+ggcorrplot(
+  correlation_matrix,
+  lab = FALSE,                # nie chcemy Wyświetlenie wartości korelacji na wykresie
+  outline.color = "white"      # Białe obramowanie komórek
+) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16),
+    plot.subtitle = element_text(hjust = 0.5, size=8),
+    axis.text.x = element_text(angle = 90, hjust = 1, size = 8)  # Obrót podpisów osi X
+
+  ) +
+  labs(
+    title = "Macierz korelacji metodą Spearmana",
+    subtitle = "Adnotacje w procentach"
+  )
+
+```
+
+```{r}
+library(dplyr)
+
+# 1. Obliczenie pełnej macierzy korelacji dla zmiennych numerycznych
+cor_matrix <- cor(data_better %>% select_if(is.numeric), use = "complete.obs")
+
+# 2. Przemieszczenie górnej części macierzy korelacji, aby sprawdzić sumy korelacji dla każdej kolumny
+cor_sum <- apply(cor_matrix, 2, function(x) sum(abs(x), na.rm = TRUE))
+
+# 3. Wyciągnięcie 5 kolumn o najwyższej sumie korelacji
+top_5_cols <- names(sort(cor_sum, decreasing = TRUE)[1:5])
+
+# 4. Tworzenie nowej macierzy korelacji tylko dla tych 5 kolumn
+cor_matrix_top_5 <- cor_matrix[top_5_cols, top_5_cols]
+
+# Wyświetlenie nowej macierzy korelacji
+cor_matrix_top_5
+
+
+```
+
+```{r}
+# Rysowanie mapy cieplnej z adnotacjami
+ggcorrplot(
+  cor_matrix_top_5,
+  lab = FALSE,                # nie chcemy Wyświetlenie wartości korelacji na wykresie
+  outline.color = "white"      # Białe obramowanie komórek
+) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16),
+    plot.subtitle = element_text(hjust = 0.5, size=8),
+    axis.text.x = element_text(angle = 90, hjust = 1, size = 8)  # Obrót podpisów osi X
+
+  ) +
+  labs(
+    title = "Macierz korelacji metodą Spearmana",
+    subtitle = "Adnotacje w procentach"
+  )
 ```
