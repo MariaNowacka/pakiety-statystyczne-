@@ -124,14 +124,35 @@ W celu realizacji tematu skonstruowałyśmy kilka pytań badawczych:
 
 **2. Wczytanie danych**
 
+Pierwszym krokiem wprowadzającym do analizy danych będzie ich wprawidłowe wczytanie. Nastęnie musimy zadbać o odpowednie typy danych.
+
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(tidyverse)
 data = read.csv('sleep.csv')
-view(data)
+#view(data)
 
 ```
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+library(dplyr)
+
+# Wybrane kolumny
+selected_columns <- c("Gender", "Bedtime", "Wakeup.time", "Smoking.status")
+
+# Tworzenie tabeli z nazwą i typem danych
+column_info <- data %>%
+  select(all_of(selected_columns)) %>%
+  summarise(across(everything(), ~ class(.))) %>%
+  pivot_longer(cols = everything(), names_to = "Column", values_to = "DataType")
+
+# Wyświetlenie tabeli
+column_info
+
+```
+
+Możemy zauważyć, że wybrane kolumny mają typ zmiennych 'character'. Chcielibyśmy to zmienić, aby łatwiej się na nich pracowało. Po tej poprawce nowe typy danych są przedstawione w tabeli. 
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 # Przekształć dane
 data_better <- data %>% 
   mutate(
@@ -140,51 +161,45 @@ data_better <- data %>%
     Bedtime = as.POSIXct(Bedtime, format = "%d/%m/%Y %H:%M"),
     Wakeup.time = as.POSIXct(Wakeup.time, format = "%d/%m/%Y %H:%M"),
     #Sleep.duration = difftime(Wakeup.time, Bedtime, units = "hours"),
-    Month = format(Bedtime, "%m")
-  )
+#    Bedtime_date = format(Bedtime, "%Y-%m-%d"),  # Tylko data
+#    Bedtime_time = format(Bedtime, "%H:%M"),     # Tylko godzina
+#    Wakeup.time_date = format(Wakeup.time, "%Y-%m-%d"),  # Tylko data
+#    Wakeup.time_time = format(Wakeup.time, "%H:%M"),     # Tylko godzina
+    Month = format(Bedtime, "%m"),
+  ) %>%
+#  select(1:3, Bedtime_date, Bedtime_time,Wakeup.time_date, Wakeup.time_time, everything()) %>%
+#  select(-Bedtime, -Wakeup.time)
+  select(-ID)
 
+
+view(data_better)
+```
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+library(dplyr)
+library(purrr)
+
+# Tworzenie tabeli z nazwą i typem danych
+column_info_modified <- data_better %>%
+  select(all_of(selected_columns)) %>%
+  reframe(Column = names(.), DataType = map_chr(., ~class(.x)[1]))
+
+# Wyświetlenie tabeli
+column_info_modified
 
 ```
 
-```{r}
-view(data_better)
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+#view(data_better)
 ```
 
 **3. Analiza danych**
 
-```{r}
-# Przefiltruj dane, aby usunąć ujemne lub błędne wartości
-#data_clean <- data_better %>%
-#  filter(Sleep.duration > 0)  # Usuwa rekordy z ujemnymi wartościami lub zerami
+Przyjrzyjmy się naszym danym, sprawdzając ich histogramy.
 
-# Oblicz średnią długość snu dla każdego miesiąca i wyświetl dane
-average_sleep <- data_better %>%
-  group_by(Month) %>%
-  summarise(Average.sleep = mean(Sleep.duration, na.rm = TRUE))
-
-# Sprawdź obliczone średnie (opcjonalne)
-print(average_sleep)
-
-# Narysuj wykres słupkowy
-average_sleep %>%
-  ggplot(aes(x = Month, y = Average.sleep)) +
-  geom_col(fill = "skyblue") +  # Wykres słupkowy
-  labs(
-    title = "Średnia ilość snu w każdym miesiącu",
-    x = "Miesiąc",
-    y = "Średnia ilość snu (godziny)"
-  ) +
-  theme_minimal()
-```
-
-```         
-```
-
-```{r}
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(dplyr)
-```
-
-```{r}
 # Zmiana wartości w kolumnie Gender (Male -> 1, Female -> 0)
 #dataframe <- data %>%
 #  mutate(Gender = ifelse(Gender == "Male", 1, 0))
@@ -209,19 +224,15 @@ library(dplyr)
 
 ```
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 # Przeniesienie kolumny "Sleep efficiency" na koniec
 #cols <- colnames(data_better)
 #data_better <- data_better %>%
 #  select(all_of(setdiff(cols, "Sleep.efficiency")), "Sleep.efficiency")
 
-# Usunięcie kolumny ID
-
-
-
 ```
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 # Rysowanie histogramów dla wszystkich kolumn
 library(ggplot2)
 # Wyciąganie tylko zmiennych numerycznych
@@ -229,17 +240,44 @@ data_numeric <- data_better %>%
   select_if(is.numeric)
 
 # Wyświetlenie pierwszych kilku wierszy z danych numerycznych
-head(data_numeric)
+#head(data_numeric)
 data_numeric %>%
   gather(key = "Variable", value = "Value") %>%
   ggplot(aes(x = Value)) +
   facet_wrap(~Variable, scales = "free") +
-  geom_histogram(bins = 30, fill = "skyblue", color = "black") +
+  geom_histogram(bins = 30, fill = "darkseagreen", color = "black") +
   theme_minimal() +
-  labs(title = "Histogramy dla wszystkich kolumn", x = "Wartość", y = "Częstotliwość")
+  labs(title = "Histogramy dla wszystkich kolumn", x = "Wartość", y = "Częstotliwość", size = 5)
 ```
+Dodatkowo sprawdzimy, czy pora roku ma związek z długością snu,
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+# Przefiltruj dane, aby usunąć ujemne lub błędne wartości
+#data_clean <- data_better %>%
+#  filter(Sleep.duration > 0)  # Usuwa rekordy z ujemnymi wartościami lub zerami
 
-```{r}
+# Oblicz średnią długość snu dla każdego miesiąca i wyświetl dane
+average_sleep <- data_better %>%
+  group_by(Month) %>%
+  summarise(Average.sleep = mean(Sleep.duration, na.rm = TRUE))
+
+# Sprawdź obliczone średnie (opcjonalne)
+#print(average_sleep)
+
+# Narysuj wykres słupkowy
+average_sleep %>%
+  ggplot(aes(x = Month, y = Average.sleep)) +
+  geom_col(fill = "darkseagreen", color = "black") +  # Wykres słupkowy, wcześnijeszy kolor skyblue
+  labs(
+    title = "Średnia ilość snu w każdym miesiącu",
+    x = "Miesiąc",
+    y = "Średnia ilość snu (godziny)"
+  ) +
+  theme_minimal()
+```
+Choć mogłoby się wydawać, że jesienna i zimowa pogoda zachęcają do dłuższego snu, widoczne różnice są minimalne.
+Możemy jednak poszukać innych korelacji w naszych danych. Posłużymy się w tym celu korelacją Spearmana.
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(ggplot2)
 library(ggcorrplot)
 
@@ -256,7 +294,9 @@ ggcorrplot(
   theme(
     plot.title = element_text(hjust = 0.5, size = 16),
     plot.subtitle = element_text(hjust = 0.5, size=8),
-    axis.text.x = element_text(angle = 90, hjust = 1, size = 8)  # Obrót podpisów osi X
+    axis.text.x = element_text(angle = 90, hjust = 1, size = 8),  # Obrót podpisów osi X
+    axis.title.x = element_blank(), # Usunięcie podpisu osi X ("Var1")
+    axis.title.y = element_blank()  # Usunięcie podpisu osi Y ("Var2")
 
   ) +
   labs(
@@ -265,8 +305,9 @@ ggcorrplot(
   )
 
 ```
+Wybierzemy teraz 6 najbardziej skorelowanych zmiennych i skupimy się na nich w dalszej analizie.
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(dplyr)
 
 # 1. Obliczenie pełnej macierzy korelacji dla zmiennych numerycznych
@@ -277,20 +318,20 @@ cor_sum <- apply(cor_matrix, 2, function(x) sum(abs(x), na.rm = TRUE))
 
 # 3. Wyciągnięcie 5 kolumn o najwyższej sumie korelacji
 top_5_cols <- names(sort(cor_sum, decreasing = TRUE)[1:5])
-
+top_6 <- names(sort(cor_sum, decreasing = TRUE)[1:6])
 # 4. Tworzenie nowej macierzy korelacji tylko dla tych 5 kolumn
 cor_matrix_top_5 <- cor_matrix[top_5_cols, top_5_cols]
-
+cor_matrix_top_6 <- cor_matrix[top_6, top_6]
 # Wyświetlenie nowej macierzy korelacji
-cor_matrix_top_5
+#cor_matrix_top_5
 
 
 ```
 
-```{r}
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 # Rysowanie mapy cieplnej z adnotacjami
 ggcorrplot(
-  cor_matrix_top_5,
+  cor_matrix_top_6,
   lab = FALSE,                # nie chcemy Wyświetlenie wartości korelacji na wykresie
   outline.color = "white"      # Białe obramowanie komórek
 ) +
@@ -298,7 +339,9 @@ ggcorrplot(
   theme(
     plot.title = element_text(hjust = 0.5, size = 16),
     plot.subtitle = element_text(hjust = 0.5, size=8),
-    axis.text.x = element_text(angle = 90, hjust = 1, size = 8)  # Obrót podpisów osi X
+    axis.text.x = element_text(angle = 90, hjust = 1, size = 8),  # Obrót podpisów osi X
+    axis.title.x = element_blank(), # Usunięcie podpisu osi X ("Var1")
+    axis.title.y = element_blank()  # Usunięcie podpisu osi Y ("Var2")
 
   ) +
   labs(
@@ -370,8 +413,6 @@ ggplot(data_better, aes(x = Caffeine.consumption, y = Sleep.duration)) +
 
 ```
 
-
-
 ```{r}
 data_better <- data_better[!is.na(data_better$Exercise.frequency), ]
 
@@ -392,6 +433,7 @@ ggplot(data_better, aes(x = Exercise.frequency, y = Sleep.efficiency)) +
     plot.title = element_text(hjust = 0.5)  
   )
 ```
+
 ```{r}
 
 
@@ -410,4 +452,3 @@ ggplot(data_better, aes(x = Smoking.status, y = Sleep.efficiency)) +
   )
 
 ```
-
