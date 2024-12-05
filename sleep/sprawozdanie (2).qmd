@@ -280,6 +280,7 @@ Możemy jednak poszukać innych korelacji w naszych danych. Posłużymy się w t
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
 library(ggplot2)
 library(ggcorrplot)
+library(wesanderson)
 
 # Obliczenie macierzy korelacji metodą Spearmana
 correlation_matrix <- cor(data_numeric, method = "spearman", use = "complete.obs")
@@ -288,7 +289,8 @@ correlation_matrix <- cor(data_numeric, method = "spearman", use = "complete.obs
 ggcorrplot(
   correlation_matrix,
   lab = FALSE,                # nie chcemy Wyświetlenie wartości korelacji na wykresie
-  outline.color = "white"      # Białe obramowanie komórek
+  outline.color = "white",
+  colors = wes_palette("GrandBudapest2", n = 3) # Białe obramowanie komórek
 ) +
   theme_minimal() +
   theme(
@@ -401,11 +403,26 @@ data_better <- data %>%
   mutate(
     Caffeine.consumption = as.numeric(Caffeine.consumption)  
   )
+
+data_better <- data_better %>%
+  filter(!is.na(Caffeine.consumption))
+
+model <- lm(Sleep.duration ~ Caffeine.consumption, data = data_better)
+summary(model)
+slope <- coef(model)["Caffeine.consumption"]
+slope
+
 ggplot(data_better, aes(x = Caffeine.consumption, y = Sleep.duration)) +
-  geom_smooth(method = "lm", color = "hotpink") +
-  labs(title = "Zależność spożycia kawy od długości snu",
-       x = "Spożycie kawy (mg kofeiny)",
-       y = "Długość snu (godziny)") +
+  geom_smooth(method = "lm", aes(color = "Linia regresji"), se = FALSE) +
+  scale_color_manual(
+    values = c("Linia regresji" = "hotpink"),
+    labels = c(paste("Linia regresji (nachylenie:", round(slope, 3), ")"))
+  ) +
+  labs(
+    title = "Zależność spożycia kawy od długości snu",
+    x = "Spożycie kawy (mg kofeiny)",
+    y = "Długość snu (godziny)"
+  ) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5)
