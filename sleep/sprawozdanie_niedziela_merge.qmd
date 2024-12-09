@@ -1,0 +1,731 @@
+---
+format: pdf 
+---
+
+## ![Nagłówek](https://github.com/13928861/pakiety/blob/main/Sleep%20(8).png?raw=true)
+
+*Spis treści:*
+
+-   Wprowadzenie oraz opis danych
+-   Wczytanie danych
+-   Analiza danych
+-   Podsumowanie
+
+**1. Wprowadzenie**
+
+Sen odgrywa kluczową rolę w naszym życiu, wpływając na zdrowie fizyczne, kondycję psychiczną lub ogólną jakość życia. Jako studenci często spotykamy się z problemem niedostatecznego snu, co jest nie tylko wynikiem intensywnego trybu życia pod kątem nauki oraz pracy, ale również wpływu różnych czynników, takich jak stres, nawyki żywieniowe czy używki. W rozmowach z naszymi kolegami wielokrotnie pojawia się temat problemów z zasypianiem, niskiej jakości snu czy odczuwania zmęczenia mimo przespanych godzin. Zainsporowało to nas do spojrzenia na zadane zagadnienie z perspektywy statystyki. ![Nagłówek](https://github.com/13928861/pakiety/blob/main/Sleep%20(9).png?raw=true) Głównym celem analizy naszego zadanego problemu jest zbadanie czynników wpływających na jakość snu, mierzoną jako jej efektywność. Podejście ze strony statystycznej pozowli nam uzyskać ciekawe spostrzeżenia, które pomogą nam w odpowiedzi na pytania dotyczące tego, jakie zmienne mogą być kluczowe w poprawie jakości snu studentów, ale również ludzi w różnym przedziale wiekowym.
+
+**1.1 Pochodzenie danych**
+
+Użyty przez nas w raporcie zestaw danych pt: "Sleep Efficiency Prediction" jest dostępny na platformie Kaggle.
+
+-   **źródło**: Kaggle (udostępnione przez użytkownika o nazwie Ishhjain)
+-   **licencja**: Brak informacji na stronie (Unknown)
+
+**1.2 Opis zmiennych**
+
+1)  **Age**: Wiek, jednostka: lata, możliwe wartości liczbowe około od 1 do 100, statystyki opisowe:
+
+    -   **średnia**: 40.34
+    -   **wartość minimalna**: 9
+    -   **wartość maksymalna**: 69
+    -   **odchylenie standardowe**: 13.08
+
+2)  **Gender**: Płeć, jednostka: brak, możliwe wartości: Famale (kobieta), Male (Mężczyzna).
+
+3)  **Bedtime**: Godzina położenia się spać, format: data i czas, jednostka: godzina i minuty.
+
+4)  **Wakeup time**: Godzina obudzenia się, Format: data i czas, jednostka: godziny i minuty.
+
+5)  **Sleep duration**: Czas trwania snu, jednostka: godziny, możliwe wartości: od 0 do 24, statystyki opisowe:
+
+    -   **średnia**: 7.45
+    -   **wartość minimalna**: 5
+    -   **wartość maksymalna**: 10
+    -   **odchylenie standardowe**: 0.84
+
+6)  **Sleep efficiency**: efektywność snu, jednostki brak, możliwe wartości: z przedziału (0,1), statystyki opisowe:
+
+    -   **średnia**: 0.79
+    -   **wartość minimalna**: 0.5
+    -   **wartość maksymalna**: 0.99
+    -   **odchylenie standardowe**: 0.13
+
+7)  **REM sleep percentage**: Procent snu REM, jednostka: procenty, możliwe wartości: od 0 do 100, statystyki opisowe:
+
+    -   **średnia**: 22.57
+    -   **wartość minimalna**: 15
+    -   **wartość maksymalna**: 30
+    -   **odchylenie standardowe**: 3.55
+
+8)  **Deep sleep percentage**: Procent snu głębokiego, jednostka: procenty, możliwe wartości: 0 do 100, statystyki opisowe:
+
+    -   **średnia**: 53.16
+    -   **wartość minimalna**: 18
+    -   **wartość maksymalna**: 75
+    -   **odchylenie standardowe**: 15.50
+
+9) **Light sleep percentage**: Procent snu lekkiego, jednostka: procenty, możliwe wartości: 0 do 100, statystyki opisowe:
+
+    -   **średnia**: 24.27
+    -   **wartość minimalna**: 7
+    -   **wartość maksymalna**: 63
+    -   **odchylenie standardowe**: 15.11
+
+10) **Awakenings**: Przebudzenia podczas snu, jednostka: liczba całkowita, możliwe wartości: od 0 w górę, statystyki opisowe:
+
+    -   **średnia**: 1.68
+    -   **wartość minimalna**: 0
+    -   **wartość maksymalna**: 4
+    -   **odchylenie standardowe**: 1.34
+
+11) **Caffeine consumption**: Spożycie kofeiny, jednostka: miligramy, możliwe wartości: od 0 w górę, statystyki opisowe:
+
+    -   **średnia**: 24.53
+    -   **wartość minimalna**: 0
+    -   **wartość maksymalna**: 200
+    -   **odchylenie standardowe**: 32.35
+
+12) **Alcohol consumption**: Spożycie alkoholu, jednostka: unjce, możliwe wartości: od 0 w górę, statystyki opisowe:
+
+    -   **średnia**: 1.12
+    -   **wartość minimalna**: 0
+    -   **wartość maksymalna**: 5
+    -   **odchylenie standardowe**: 1.60
+
+13) **Smoking status**: Status palenia, możliwe wartości: "Yes" (pali) lub "No" (nie pali)
+
+14) **Exercise frequency**: Częstotliwość ćwiczeń w tygodniu, jednostka: liczba dni, możliwe wartości: od 0 do 7, statystyki opisowe:
+
+    -   **średnia**: 1.78
+    -   **wartość minimalna**: 0
+    -   **wartość maksymalna**: 5
+    -   **odchylenie standardowe**: 1.41
+
+![Nagłówek](https://github.com/13928861/pakiety/blob/main/Sleep%20(10).png?raw=true){width="658" height="52"}\
+W celu realizacji tematu skonstruowałyśmy kilka pytań badawczych:
+
+-   Jakie czynniki mają wpływ na efektywność snu (alkohol, kofeina, sport)?
+
+-   Czy istnieje związek między długością snu a efektywnością?
+
+-   Jak różne grupy demograficzne różnią się pod względem snu?
+
+-   Czy ilość przebudzeń w ciągu nocy wpływa na jakość snu?
+
+-   Czy czas pójścia spać ma znaczenie?
+
+![Nagłówek](https://github.com/zuzanasilowska/pakiety/blob/main/Sleep%20(16).png?raw=true){width="658" height="52"} Pierwszym krokiem wprowadzającym do analizy danych będzie ich wprawidłowe wczytanie. Nastęnie musimy zadbać o odpowednie typy danych.
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(ggcorrplot)
+library(paletteer)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+data = read.csv('sleep.csv')
+#view(data)
+
+```
+
+```{r, echo = FALSE}
+library(dplyr)
+library(purrr)
+
+selected_columns <- c("Gender", "Bedtime", "Wakeup.time", "Smoking.status")
+column_info <- data %>%
+  select(all_of(selected_columns)) %>%
+  reframe(Column = names(.), DataType = map_chr(., ~class(.x)[1]))
+
+column_info
+
+```
+
+Możemy zauważyć, że wybrane kolumny mają typ zmiennych 'character'. Chcielibyśmy to zmienić, aby łatwiej się na nich pracowało. Zmienione typy danych widzimy w tabeli. Dodatkowo usuwamy niepotrzebne kolumny oraz dodajemy kolumnę z godziną wyciągniętą z kolummny "Bedtime".
+
+```{r, echo = FALSE, error=FALSE}
+# Przekształć dane
+data_better <- data %>% 
+  mutate(
+    Smoking.status = as.factor(Smoking.status),
+    Gender = as.factor(Gender),
+    Bedtime = as.POSIXct(Bedtime, format = "%d/%m/%Y %H:%M"),
+    Wakeup.time = as.POSIXct(Wakeup.time, format = "%d/%m/%Y %H:%M")
+  ) 
+data_better <- data_better %>%
+  select(-ID)
+```
+
+```{r, echo = FALSE}
+library(dplyr)
+library(purrr)
+
+column_info_modified <- data_better %>%
+  select(all_of(selected_columns)) %>%
+  reframe(Column = names(.), DataType = map_chr(., ~class(.x)[1]))
+
+column_info_modified
+```
+
+![Nagłówek](https://github.com/zuzanasilowska/pakiety/blob/main/Sleep%20(17).png?raw=true){width="658" height="52"} Na początek spójrzmy, jak rozkłada się się zmienna "Sleep.efficiency" wśród naszych danych.
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE, dev="cairo_pdf"}
+library(ggplot2)
+
+# Wyciąganie tylko zmiennych numerycznych
+data_numeric <- data_better %>%
+  select_if(is.numeric)
+
+data_numeric %>%
+  ggplot(aes(x = Sleep.efficiency)) + 
+  geom_histogram(bins = 30, fill = "darkseagreen", color = "black") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +  
+  labs(
+    title = "Histogram dla wybranej efektywności",
+    x = "Efektywność",
+    y = "Częstotliwość"
+  )
+
+```
+
+Z histogramów możemy odczytać, że większość osób dosyć efektywnie się wysypia. Co jednak wpływa na niższą efektywność snu u innych osób? Użyjemy narzędzi statystycznych, aby odpowiedzieć na postawione wcześniej pytania badawcze.
+
+**Korelacja**
+
+Sprawdźmy, które zmienne są ze sobą skorelowane. Wykorzystujemy metodę Spearmana.
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE, dev="cairo_pdf"}
+correlation_matrix <- cor(data_numeric, method = "spearman", use = "complete.obs")
+palette_colors <- paletteer_c("grDevices::PRGn", 30)
+short_names <- str_extract(colnames(correlation_matrix), "^[^.]*")
+short_names <- ifelse(
+  colnames(correlation_matrix) == "Sleep.duration", "Duration",
+  ifelse(colnames(correlation_matrix) == "Sleep.efficiency", "Efficiency", short_names)
+)
+# Skrócenie nazw w macierzy korelacji
+colnames(correlation_matrix) <- short_names
+rownames(correlation_matrix) <- short_names
+
+ggcorrplot(
+  correlation_matrix,
+  lab = FALSE,                
+  outline.color = "white"
+) +
+  scale_fill_gradientn(colors = as.character(palette_colors)) + 
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(angle = 90, hjust = 1, size = 8),  # Obrót podpisów osi X
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+
+  ) +
+  labs(
+    title = "Macierz korelacji metodą Spearmana"
+  )
+
+```
+Patrząc na macierz korelacji możemy zauważyć silną zależność między fazami sny głębokiego i lekkiego. Jest to jak najbardziej logiczna obserwacja, gdyż wszystkie fazy snu podane są w procentach i powinny sumować się do 100 - to znaczy, że jeśli nasza faza snu głębokiego jest długa, lekki sen będzie (procentowo) trwał krócej. W analizie nie będziemy skupiać się na tych zmiennych. O wiele bardziej będą nas interesować inne zależności, które przetestujemy również innymi metodami.
+
+![Nagłówek](https://github.com/zuzanasilowska/pakiety/blob/main/Sleep%20(15).png?raw=true){width="658" height="52"} Efektywność snu, definiowana jako stosunek czasu spędzonego w fazie snu do całkowitego czasu spędzonego w łóżku, jest istotnym wskaźnikiem jakości wypoczynku. Szczególnie w przypadku studentów istotna może okazać się analiza czynników, które posiadają zasadniczy wpływ w tym zakresie. Korzystając z danych zawartych w naszym zestawi, możemy postawić tezę, że czynniki takie jak spożycie alkoholu i kawy, palenie papierosów czy uprawianie sportu będą posiadały takowy wpływ.
+
+-   **Konsumpcja alkoholu:**
+
+    -   alkohol często wpływa na strukturę snu, w szczególności fazę REM, co może obniżać jego efektywność.
+
+<!-- -->
+
+-   **Spożycie kawy**:
+
+    -   kofeina jest znanym stymulantem, który może utrudniać zasypianie lub zmieniać długość faz snu.
+
+-   **Palenie tytoniu**:
+
+    -   nikotyna, jako substancja psychoaktywna, również może wpływać na czas zasypiania oraz jakość snu.
+
+-   **Aktywność fizyczna**:
+
+    -   regularne ćwiczenia mogą przyczyniać się do lepszej jakości snu.
+
+Przeprowadzimy analizę z wykorzystaniem boxplotów, które pozwolą nam zobrazować rozkład danych oraz wychwycić różnice i potencjalne zależności pomiędzy podanymi parametrami. Boxploty umożliwią również identyfikację ewentualnych wartości odstających, które mogą dostarczyć dodatkowych informacji na temat analizowanych zmiennych.
+
+Najpierw skupimy się na omówieniu wpływu spożywania alkoholu w ciągu dnia. W dostępnych danych spożycie alkoholu zostało wyrażone w uncjach (oz). Jedna uncja odpowiada około 28,35 gramów, co pozwala łatwo przeliczyć wartości na bardziej znane jednostki, takie jak miligramy. Wartości w danych mieszczą się w zakresie od 0 do 5. Na potrzeby analizy podzielimy je na cztery kategorie: brak spożywania (0), małą ilość (1-2), dużą ilość (3-5) . Wykres pudełkowy prezentuje się następująco:
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+data_better <- data_better[!is.na(data_better$Alcohol.consumption), ]
+
+# Podział na kategorie
+data_better$Alcohol.consumption <- cut(data_better$Alcohol.consumption, 
+                                breaks = c(-Inf,0,2,Inf), 
+                                labels = c("brak", "mało", "dużo"))
+
+# Wizualizacja za pomocą ggplot2
+
+ggplot(data_better, aes(x = Alcohol.consumption, y = Sleep.efficiency)) +
+  geom_boxplot(fill = "darkseagreen", outlier.color = "hotpink", outlier.size = 2) +
+  labs(title = "Wpływ spożycia alkoholu na efektywność snu",
+       x = "Spożycie alkoholu",
+       y = "Efektywność snu") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)  
+  )
+
+```
+
+**Opis wykresu**
+
+-   ***K*****ategoria brak:**
+
+    -   Efektywność w tej grupie jest najwyższa, z medianą około 0,85.
+
+    -   Rozkład jest dość zwarty, co oznacza mniejsze zróżnicowanie efektywności snu w tej grupie.
+
+    -   Wartości odstające wskazują pewne przypadki wyjątkowo niskiej efektywności.
+
+-   **Kategoria mało:**
+
+    -   Rozstęp międzykwartylowy jest większy, co sugeruje większe zróżnicowanie w efektywności snu w tej kategorii.
+
+    -   Mediana efektywności snu w tej grupie wynosi 0,75 i jest mniejsza w porównaniu z kategorią "brak".
+
+-   **Kategoria dużo:**
+
+    -   Efektywność snu w tej grupie jest najniższa (z medianą 0,7), a rozstęp międzykwartylowy jest nieco większy niż w kategorii "mało".
+
+Na podstawie przedstawionych boxplotów dochodzimy do wniosku, że alkohol jest jednym z istotnych czynników wpływających na jakość i efektywność naszego snu. Im więcej alkoholu spożyjemy w ciągu dnia, tym ta efektywność będzie niższa. Jeśli przyjrzymy się rożnicy w medianie dla kategorii "brak" oraz "dużo", możemy zauważyć, że wynosi ona około 0,15.
+
+Warto jednak ponownie zwrócić uwagę na odstające wartości w grupie "brak", które sugerują nam, że na niską efektywność spory wpływ muszą mieć jeszcze jakies czynniki. Możemy łatwo sprawdzić, które dokładnie aspekty wpłyneły aż tak na obniżenie jakości snu naszych wartości odstających. Wyniki prezentują się następująco:
+
+```{r, echo = FALSE, warning=FALSE, dev="cairo_pdf"}
+
+outliers <- data_better %>%
+  filter(Alcohol.consumption == "brak") %>% 
+  filter(Sleep.efficiency < quantile(Sleep.efficiency, 0.25) - 1.5 * IQR(Sleep.efficiency)) 
+
+#colnames(outliers)
+
+outliers_long <- outliers %>%
+  select(Caffeine.consumption, Smoking.status, Exercise.frequency) %>% 
+  gather(key = "Variable", value = "Value")
+
+
+ggplot(outliers_long, aes(x = Value, fill = Variable)) +
+  geom_bar(color = "black", alpha = 0.8) +
+  facet_grid(~Variable, scales = "free") +
+  scale_fill_paletteer_d("RColorBrewer::Pastel1") + 
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5), 
+    legend.position = "bottom"
+  ) +
+  labs(
+    title = "Analiza innych czynników dla wartości odstających (brak alkoholu)",
+    x = "Wartość",
+    y = "Częstotliwość"
+  )
+
+```
+
+Na podstawie powyższego wykresu widać, że większość osób, mimo nie picia alkoholu, pali papierosy lub wykazuje ograniczoną aktywność fizyczną. Interesujący jest aspekt kawy, ponieważ większość nie spożywa jej w ogóle lub w małych ilościach. Może wskazywać to na fakt, iż picie kawy nie odgrywa tak dużej roli pod kątem jakości snu, na tyle innych czynników.
+
+**W związku z powyższymi obserwacjami warto dokładniej przeanalizować parametry, takie jak picie kawy, aktywność fizyczna i palenie papierosów, aby upewnić się, czy wyciągnięte wnioski są słuszne i znajdują potwierdzenie w danych.**
+
+Najpierw skupimy się na aspekcie picia kawy w ciągu dnia. Według powyższych wniosków, nie powinna mieć ona, aż tak dużego wpływu na efektywność snu naszych badanych, co stanowi ciekawą obserwacje. Kofeina, znana ze swoich właściwości pobudzających, często kojarzona jest z potencjalnym zakłócaniem snu, zwłaszcza w przypadku studentów, którzy piją duże ilości kawy. Może to prowadzić do błędnego przekonania, że to właśnie kawa ma największy wpływ na obniżoną efektywność snu, co wymaga dokładniejszej analizy, aby zweryfikować te założenia. W tym celu również utworzymy boxplota i przeanalizujemy wyniki:
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+
+data_better <- data_better[!is.na(data_better$Caffeine.consumption), ]
+
+data_better$Caffeine.consumption_numeric <- data_better$Caffeine.consumption
+
+data_better$Caffeine.consumption <- cut(data_better$Caffeine.consumption, 
+                                breaks = c(-Inf,0,99,Inf), 
+                                labels = c("brak", "mało", "dużo"))
+
+library(ggplot2)
+ggplot(data_better, aes(x = Caffeine.consumption, y = Sleep.efficiency)) +
+  geom_boxplot(fill = "darkseagreen", outlier.color = "hotpink", outlier.size = 2) +
+  labs(title = "Wpływ spożycia kawy na efektywność snu",
+       x = "Spożycie kawy",
+       y = "Efektywność snu") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)  
+  )
+
+```
+
+**Wnioski:**
+
+-   Brak jednoznacznego negatywnego wpływu kawy na efektywność snu.
+
+-   Niewielkie różnice między grupami:
+
+    -   Między grupami "brak" i "mało" różnica jest niewielka, co sugeruje, że umiarkowane spożycie kawy nie wpływa wyraźnie na efektywność snu
+
+-   Zmienność w grupie "brak":
+
+    -   Wzkazywać to może na znaczący wpływ innych czynników (alkohol, palenie, aktywność fizyczna
+
+Okazuje się, że relacja między spożywaniem kofeiny, a efektywnością snu jest bardziej skomplikowana. Postanowiłyśmy lekko zagłębić się w tym temacie i dokonać krótki research. Na podstawie informacji zawartych w artykułach okazuje się, że kawa w porównaniu z resztą naszych czynników, nie wpływa tak znacząco na rutynę naszego snu, co zgadza się z wynikami naszej analizy. Jednak zbyt przesada ilość lub zła pora dnia, może zakłócić poszczególne aspekty takie jak: długość snu, więc nie powinniśmy całkowicie ignorować tego parametru. Jednak są to poszczególne przypadki, a nie ogólna zasada. Dla potwierdzenia wykonamy jeszcze wykres przedstawiający zależność między piciem kawy, a wspomnianą wcześniej długością snu.
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE, dev="cairo_pdf"}
+data_better$Caffeine.consumption <- data_better$Caffeine.consumption_numeric
+
+# Model liniowy
+model <- lm(Sleep.duration ~ Caffeine.consumption, data = data_better)
+slope <- coef(model)[2]
+summary(model)
+cat("Nachylenie prostej (slope):", slope, "\n")
+
+# Wykres liniowy
+library(ggplot2)
+ggplot(data_better, aes(x = Caffeine.consumption, y = Sleep.duration)) +
+  #geom_point(color = "darkseagreen4", size = 2, alpha = 0.7) +  
+  geom_smooth(method = "lm", color = "hotpink") +      
+  labs(title = "Zależność spożycia kawy od długości snu",
+       x = "Spożycie kawy (mg kofeiny)",
+       y = "Długość snu (godziny)") +
+  coord_cartesian(xlim = c(0, 200), ylim = c(7, 8)) + 
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+
+```
+
+Wykres na pierwszy rzut oka nie daje nam wielu informacji, ale w celu dokładniejszej analizy możemy użyć funkcji *summary*, która w R jest używana do generowania szczegółowego podsumowania obiektów. Przy pomocy *lm()* wyliczymy model liniowy, a wymieniona wcześniej funkcja zwróci nam konkretne informacje:
+
+-   **Residuals**: statystyki dotyczące reszt.
+
+    -   Patrząc na te dane, widzimy, że reszty są blisko zera, co sugeruje, że model nie przewiduje dużych odchyleń. Jednak to nie jest wystarczające do oceny jego skuteczności.
+
+-   **Coefficients**: współczynniki regresji:
+
+    -   Slope (nachylenie): wpływ zmiennej niezależnej na zmienną zależną. W naszym przypadku nachylenie wynosi około -0,0002, co oznacza w sumie bardzo niewielki wpływ.
+
+    -   Intercept: wartość 7.45 oznacza przewidywaną średnią długość przy zerowym spożyciu kawy.
+
+    -   P- value: dla zmiennej niezależnej (Caffeine.consumption) wartość p = 0.857 jest znacznie większa od typowego poziomu istotności (np. 0.05). Sugeruje to, że wpływ spożycia kofeiny na długość snu nie jest statystycznie istotny.
+
+-   **R-squared:**
+
+    -   Wartość $R^2 =0.000058$ wskazuje, że model wyjaśnia zaledwie 0.0058% zmienności w długości snu na podstawie spożycia kofeiny. To bardzo niski wynik, co oznacza, że zmienna niezależna (spożycie kofeiny) praktycznie nie tłumaczy zmienności długości snu.
+
+Wykres ponownie pokazał nam, że spożycie kofeiny nie ma wielkiego wpływu na aspekt naszego snu. Wyniki nie są statystycznie istotne, ponieważ p \> 0,05. Dodatkowo bardzo niskie $R^2$ wkazuje, że istnieją inne czynniki, które bardziej wpływają na długość snu. Rzeczywiście osoby, które spożywają więcej kofeiny mają mniejszą wartość dla dlugości snu, ponieważ funkcja maleje, ale nie jest to na tyle duży spadek. Może istnieć zbyt mała rozbieżność w danych, aby zaobserwować znaczący efekt oraz wpływ kofeiny będzie bardziej widoczny przy ekstremalnych wartościach.
+
+Przejdźmy więc do następnego czynnika, którym jest aktywność fizyczna. Wykresy pudełkowe prezentują się następująco:
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+data_better <- data_better[!is.na(data_better$Exercise.frequency), ]
+
+# Podział na kategorie
+data_better$Exercise.frequency <- cut(data_better$Exercise.frequency, 
+                                breaks = c(-Inf,0,2,Inf), 
+                                labels = c("brak", "mało", "dużo"))
+
+# Wizualizacja za pomocą ggplot2
+
+ggplot(data_better, aes(x = Exercise.frequency, y = Sleep.efficiency)) +
+  geom_boxplot(fill = "darkseagreen", outlier.color = "hotpink", outlier.size = 2) +
+  labs(title = "Wpływ aktywności fizycznej na efektywność snu",
+       x = "Aktywność fizyczna",
+       y = "Efektywność snu") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)  
+  )
+```
+
+**Analiza:**
+
+-   **Brak aktywności:**
+
+    -   Efektyność snu jest ewidentnie niższa, co widać po medianie w porównaniu do innych grup.
+
+    -   Występuje większa zmienność danych (większy rozstęp międzykwartylowy).
+
+-   **Mała aktywność:**
+
+    -   Rozstęp jest nieco mniejszy, co wskazuje na większą stabilność wyników.
+
+    -   Mediana również jest większa w porównaniu z grupą nie uprawiającą sportu.
+
+-   **Duża aktywność:**
+
+    -   Najwyższa mediana sposród grup.
+
+    -   Najmniejsza zmienność wyników, co oznacza bardziej przewidywalny wpływ dużej aktywności na sen.
+
+**Wnioski:**
+
+W kwestii aktywności fizycznej naszych badanych w porównaniu do wpływu kawy, widzimy wyraźniejszy wpływ na efektywność naszego snu. Ewidentnie osoby, które w ciągu tygodnia bardziej praktykują ruch, posiadają lepsze rezultaty pod kątem snu.
+
+Pytanie dlaczego sport ma o wiele większy i widoczny wpływ na sen, w porównaniu ze spożywaniem kawy? Wynik ten najprawdopodobniej spowodowany jest faktem, iż aktywność fizyczna posiada większą moc na wiele mechanizmów naszego organizmu. Potrafi wpłynąć *długoterminowo* na nasze zdrowie, redukcje stresu. Reguluje poziom kortyzolu, którego nadmiar może zakłócać sen. Redukuje napięcia mięśniowe oraz uwalnia endorfiny. Natomiast działanie kofeiny jest bardziej *krótkoterminowe*. Potrafi ona tylko zakłocić poszczególne aspekty, a nie wspomóc nasz organizm. Dzięki analizie statystycznej możemy dojść do wniosku, że większy wpływ na efektywność snu będą mieć czynniki, które *wielowymiarowo* poprawiają procesy zasypiania lub przeciwnie je zakłócają. Parametry takie jak wcześniej wspomniana kofeina jest kwestią mocno indywidualną, ponieważ organizm każdego z nas posiada własne limity i różne dawki mogą wpłynąć czysto negatywnie. Dodatkowo jak wspomniałyśmy wcześniej nie w sposób *długoterminowy* (w porównaniu ze spożyciem alkoholu, który wyrządza większe szkody zdrowotne w szybszym tempie).
+
+Ostatnim czynnikiem, który przetestujemy będzie palenie papierosów. Wykresy pudełkowe prezentują się następująco:
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+# Usunięcie braków danych w kolumnie Smoking.status i Sleep.efficiency (jeśli są)
+data_better <- data_better[!is.na(data_better$Smoking.status) & !is.na(data_better$Sleep.efficiency), ]
+
+# Tworzenie boxplota
+ggplot(data_better, aes(x = Smoking.status, y = Sleep.efficiency)) +
+  geom_boxplot(fill = "darkseagreen", outlier.color = "hotpink", outlier.size = 2) +
+  labs(title = "Wpływ palenia na efektywność snu",
+       x = "Status palenia (yes = pali, no = nie pali)",
+       y = "Efektywność snu") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)  
+  )
+
+
+```
+
+-   Osoby, które nie palą mają wyższą medianę efektywności snu w porównaniu do osób niepalących.
+
+-   Rozstęp międzykwartylowy jest mniejszy dla niepalących, co wskazuje na bardziej spójne wyniki. Osoby, które spożywają nikotyne posiadają większą różnorodność w jakości snu.
+
+-   Osoby niepalące wykazują lepszą i bardziej stabilną jakość snu.
+
+-   Palenie wyraźnie wiąże się z niższą efektywnością snu.
+
+Sport i alkohol wywierają największy wpływ na efektywność snu – sport pozytywny, a alkohol negatywny. Nikotyna ma również zauważalny negatywny wpływ, natomiast kawa w umiarkowanych ilościach i odpowiednim czasie spożycia nie wydaje się znacząco wpływać na charakter snu.
+
+*Warto jednak zwrócić uwagę, że choć papierosy wywierają negatywny wpływ na efektywność snu, to w porównaniu z alkoholem i aktywnością fizyczną (patrząc na różnice w medianach) ich oddziaływanie jest nieco mniej znaczące*. *Jednak czy napewno nie możemy stawiać tych trzech czynników na równi?*
+
+**Sprawdźmy tę zależnoćś, dzieląc dodatkowo grupy palących i niepalących ze względu na płeć.**
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+
+# Analiza długości snu w grupach demograficznych
+demographic_analysis <- data_better %>%
+  group_by(Gender, Smoking.status) %>%
+  summarise(
+    Avg_Sleep_Duration = mean(Sleep.duration, na.rm = TRUE),
+    Avg_Sleep_Efficiency = mean(Sleep.efficiency, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Wizualizacja różnic
+data_better %>%
+  ggplot(aes(x = Gender, y = Sleep.efficiency, fill = Smoking.status)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("darkseagreen", "hotpink")) +  # Zastosowanie kolorów
+  labs(
+    title = "Efektywność snu w grupach demograficznych",
+    x = "Płeć",
+    y = "Efektywność",
+    fill = "Status palenia"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+
+Po podziale obu grup ze względu na płeć widzimy, że palenie ma o wiele mniejszy wpływ na efektywność snu u mężczyzn, za to widocznie wpływa na kobiety. Widzimy również, że pudełka obrazujące ten wpływ są bardziej zwarte u mężczyzn, niż u kobiet. Możemy więc wnioskować, że kobiety są bardziej podatne wpływ takich czynników jak palenie papierosów.
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+data_better$Caffeine.consumption <- cut(data_better$Caffeine.consumption_numeric, 
+                                breaks = c(-Inf,0,99,Inf), 
+                                labels = c("brak", "mało", "dużo"))
+data_better$Caffeine.consumption <- as.factor(data_better$Caffeine.consumption)
+
+ggplot(data_better, aes(x = factor(Gender), y = Sleep.efficiency, fill = Caffeine.consumption)) +
+  geom_boxplot() +
+  scale_fill_manual(
+    values = c("darkseagreen", "hotpink", "dodgerblue"),  # Dopasowane do trzech kategorii
+    labels = c("Brak", "Mało", "Dużo")
+  ) +
+  labs(
+    title = "Efektywność snu w grupach demograficznych",
+    x = "Płeć",
+    y = "Efektywność snu",
+    fill = "Spożycie kofeiny"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+Z podanych wykresów pudełkowych możemy wywnioskować, że:
+
+-   dla kobiet spożycie kofeiny ma negatywny wpływ na efektywność snu,
+
+-   dla mężczyzn efekt jest odwrotny i nawet spożycie dużej dafki kofeiny wpływa pozytywnie na jakość snu.
+
+Wcześniej zaprezentowane wykresy pudełkowe oraz użyte funkcje nie wykazały zależności między spożyciem kofeiny, teraz jednak widzimy te zależnośći. Jakie więc mamy wyciągnąć wnioski?
+
+- Warunkowanie zmiennych jest ważne i często zmienia obraz sytuacji.
+
+- W podanym przykładzie widzimy, że gdy jakaś zmienna wpływa pozytywnie na jedną grupę oraz negatywnie na drugą grupę, zależności te mogą się na siebie nałożyć i wzajemnie wyelimiować.
+
+- Dodatkowo, każdy człowiek reaguje inaczej na kofeinę. Gdy dodamy do tego różnice biologiczne między płciami, dostajemy bardzo niejednoznaczne wyniki. 
+
+**Czy długość snu przekłada się na jego efektywność?**
+
+Aby odpowiedzieć na to pytanie, ustalimy pewne kategorie dotyczące długości snu:
+
+-   \<6 godzin snu: bardzo mało
+
+-   6-7 godzin snu: mało
+
+-   7-9 godzin snu: optymalnie
+
+-   \>9 godzin snu: dużo.
+
+Zbadamy teraz (osobno dla kobiet i mężczyzn), czy widać jakąś zależność między długością a efektywnością snu.
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+data_better <- data_better %>%
+  mutate(Sleep.category = cut(
+    Sleep.duration,
+    breaks = c(-Inf, 6, 7, 9, Inf),
+    labels = c("bardzo mało", "mało", "optymalnie", "dużo"),
+    right = TRUE
+  ))
+
+
+# Wizualizacja różnic
+data_better %>%
+  ggplot(aes(x = Gender, y = Sleep.efficiency, fill = Sleep.category)) +
+  geom_boxplot() +
+  scale_fill_manual(
+  values = c("darkseagreen", "hotpink", "dodgerblue", "goldenrod"),
+  labels = c("bardzo mało", "Mało", "optymalnie", "Bardzo dużo")
+  ) +
+  labs(
+    title = "Długość a efektywność snu",
+    x = "Płeć",
+    y = "Efektywność snu",
+    fill = "Długość snu"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+Tutaj również widzimy pewne rozbieżności. Choć dla mężczyzn efektywność jest z grubsza stała i w małym stopniu zależy od długości snu, dla kobiet przyjmuje bardziej różnorodne wartości - widzimy to patrząc na mediany oraz rozstępy międzykwartylowe. 
+
+Z pokazanych boxplotów możemy odczytać, że czasami rzeczywiście "co za dużo to niezdrowo", choć nie we wszystkich przypadkach - widzimy, że dla pewnej obserwacji długość przełożyła się na jego wysoką efektywność.
+
+Choć możemy potwierdzić tę zależność na własnym przykładzie, Warto tutaj dodać, że liczba obserwacji w kategorii  "dużo" jest mniejsza niż w pozostałych (tabelka), więc może nie oddawać rzeczywistej zależnośći.
+```{r, error = FALSE, echo=FALSE}
+table(data_better$Sleep.category)
+```
+
+**Czy pora, o której idziemy spać ma znaczenie?**
+Naszym kolejnym problemem badawczym jest sprawdzenie, czy (oprócz wcześniej spwrdzonych parametrów) również pora, o której idziemy spać wpływa na efekrywność snu. 
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+# ten kod działa w qmd, jednak tworzy problemy przy renderowaniu do pdf
+#data_better <- data_better %>%
+#  mutate(
+#    Bedtime_hour = as.numeric(format(Bedtime, "%H"))
+#  )
+# Tworzenie grup na podstawie godzin
+#data_better <- data_better %>%
+#  mutate(Sleep_Group = case_when(
+#    Bedtime_hour >= 16 & Bedtime_hour < 22 ~ "...-22",
+#    Bedtime_hour >= 22 & Bedtime_hour < 24 ~ "22-24",
+#    Bedtime_hour >= 0 & Bedtime_hour < 2 ~ "00-02",
+#    Bedtime_hour >= 2 & Bedtime_hour < 5 ~ "02-...",
+#  ))
+#data_better$Sleep_Group <- factor(data_better$Sleep_Group, 
+#                                  levels = c("...-22", "22-24", "00-02", "02-..."))
+
+```
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+# Wizualizacja w grupach godzinowych
+#data_better %>%
+#  ggplot(aes(x = Sleep_Group, y = Sleep.efficiency, fill = Gender)) +
+#  geom_boxplot() +
+#  scale_fill_manual(values = c("darkseagreen", "hotpink")) +
+#  labs(
+#    title = "Znaczenie godziny zasypiania",
+#    x = "Pora zasypiania",
+#    y = "Efektywność",
+#    fill = "Płeć"
+#  ) +
+#  theme_minimal()
+```
+
+```{r, echo = FALSE, dev="cairo_pdf"}
+# Wizualizacja w grupach godzinowych
+#data_better %>%
+#  ggplot(aes(x = Gender, y = Sleep.efficiency, fill = Sleep_Group)) +
+#  geom_boxplot() +
+#  scale_fill_manual(values = c("darkseagreen", "hotpink", "purple", "goldenrod")) +
+#  labs(
+#    title = "Znaczenie ilości snu",
+#    x = "Płeć",
+#    y = "Efektywność",
+#    fill = "Grupa godzinowa"
+#  ) +
+#  theme_minimal()
+```
+Zbadajmy efektywność snu dla kobiet i mężczyzn w zależności od pory pójścia spać.
+![boxplot](https://github.com/MariaNowacka/pakiety-statystyczne-/blob/main/sleep/eff_plec_pora.png?raw=true)\
+
+Na powyższych wykresach pudełkowych widzimy, że wymienione parametry (płeć, pora spania) mają różny wpływ na efektywność snu, w zależności od płci.
+
+- Dla kobiet efektywność mocno spada po północy i jeszcze bardziej po 2 w nocy.
+
+- Dla mężczyzn pora odpoczynku ma mniejszy wpływ, jednak również spada przy późniejszych godzinach.
+
+
+**Czy liczba przebudzeń w strakcie snu wpływa na jego efektywność?**
+Jest to pytanie, na które możemy prosto odpowiedzieć w dość intuicyjny sposób. Nasza hipoteza brzmi krótko: tak.
+```{r, echo = FALSE, warning=FALSE, message=FALSE, dev="cairo_pdf"}
+# Analiza korelacji
+correlation_awakenings <- cor(data_better$Awakenings, data_better$Sleep.efficiency, use = "complete.obs")
+#correlation_awakenings
+
+# Wizualizacja
+data_better %>%
+  ggplot(aes(x = Awakenings, y = Sleep.efficiency)) +
+  geom_point(alpha = 0.6, color = "hotpink") +
+  geom_smooth(method = "lm", color = "darkseagreen") +
+  labs(
+    title = "Związek liczby przebudzeń z efektywnością snu",
+    x = "Liczba przebudzeń",
+    y = "Efektywność snu"
+  ) +
+  theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
+
+```
+Jak widać, nasza intuicyjna odpowiedź jest poprawna. Dzięki wykresowi możemy jednak posunąć się dalej we wnioskowaniu. Widzimy na nim, że:
+
+- najwyższą efektywność uzyskały osoby, które nie budziły się wcale w ciągu nocy,
+
+- dla osób budzących się raz efektywność waha się między 0.5 a 1, jednak z większym nagromadzeniem wartości od 0.8 w górę,
+
+- co ciekawe, osoby, które budziły się więcej niż raz, uzyskiwały bardzo podobne efektywności, niezależnie od dokładnej liczby przebudzeń. 
+
+Widzimy więc, że liczba przebudzeń w ciągu nocy wpływa na efektywność snu, jednak nie jest to zależność liniowa.
+
+**PODSUMOWANIE**
+
+W powyższej pracy udało nam się znaleźć zależności między różnymi czynnikami a efektywnością snu. Na podstawie wykresów oraz innych narzędzi statystycznych zobrazowałyśy je oraz wyciągnęłyśmy odpowiednie wnioski. Powróćmy jeszcze na chwilę do postawionych wyżej problemów badawczych i skompresujmy wcześniejsze wnioski.
+
+-     Jakie czynniki mają wpływ na efektywność snu (alkohol, kofeina, sport)?
+    - Udało nam się znaleźć zależność między spożyciem alkoholu, kofeiny i częstotliwością aktywności fizycznej a efektywnością snu. Jasno pokazałyśmy, że sport oraz abstynencja alkoholowa pozytywnie działają na jakość snu. Kofeina ma mniej przewidywalne działanie, dodatkowo (statystycznie) różne dla kobiet i mężczyzn. Kwestia ta jest bardzo indywidualna i ciężko postawić jest jednoznaczną odpwowiedź.
+-     Czy istnieje wiązek między długością snu a efektywnością?
+    - Pokazaliśmy zależność w przypadku kobiet - dodatnia korelacja do pewnego momentu, później ujemna - oraz niewielką zależność (analogiczną) w przypadku mężczyzn.
+-     Jak różne grupy demograficzne różnią się pod względem snu?
+    - Porównując różne parametry dla całej społeczności oraz z podziałem na płcie wykazaliśmy, że kobiety i mężczyźni inaczej reagują na te same czynniki. Różnice polegały na całkowitym odwróceniu zależności lub znacznym jej złagodzeniu (u mężczyzn, względem kobiet).
+-     Czy ilość przebudzeń w ciągu nocy wpływa na jakość snu?
+    - Istnieje nieliniowa dodatnia korelacja.
+-     Czy czas pójścia spać ma znaczenie?
+    - Również to różni się między przedstawicielami obu płci - znaleźliśmy mocną zależność w przypadku kobiet.
