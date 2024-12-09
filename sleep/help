@@ -1,0 +1,9 @@
+
+data_better <- data_better %>%
+  mutate(Bedtime = dmy_hm(Bedtime)) %>%
+  mutate(Sleep_Group = case_when(
+    hour(Bedtime) >= 16 & hour(Bedtime) < 22 ~ "...-22",
+    hour(Bedtime) >= 22 & hour(Bedtime) < 24 ~ "22-24",
+    hour(Bedtime) >= 0 & hour(Bedtime) < 2 ~ "00-02",
+    hour(Bedtime) >= 2 & hour(Bedtime) < 5 ~ "02-..."
+  ))
